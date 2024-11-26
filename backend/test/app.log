@@ -1,0 +1,11 @@
+2024-11-25 22:18:25,334 INFO server_final_1 MainThread : Task ID: 1424
+2024-11-25 22:18:30,356 INFO server_final_1 MainThread : Task 1424 status: running
+2024-11-25 22:18:35,380 INFO server_final_1 MainThread : Task 1424 status: running
+2024-11-25 22:18:40,416 INFO server_final_1 MainThread : Essential data of task 1424 stored in MongoDB
+2024-11-25 22:18:40,653 ERROR server_final_1 MainThread : Error in process_report: [Errno 2] No such file or directory: '/home/ndv/Desktop/capstone/project/Capstone_98_2025/backend/test/graphs_img/graph_1424_cleaned.png'
+2024-11-25 22:18:40,653 ERROR server_final_1 MainThread : Unexpected error: [Errno 2] No such file or directory: '/home/ndv/Desktop/capstone/project/Capstone_98_2025/backend/test/graphs_img/graph_1424_cleaned.png'
+2024-11-25 22:22:00,411 INFO server_final_1 MainThread : Task ID: 1425
+2024-11-25 22:22:05,441 INFO server_final_1 MainThread : Task 1425 status: running
+2024-11-25 22:22:10,458 INFO server_final_1 MainThread : Task 1425 status: running
+2024-11-25 22:22:15,496 INFO server_final_1 MainThread : Essential data of task 1425 stored in MongoDB
+2024-11-25 22:22:15,511 INFO server_final_1 MainThread : Graph structure saved to graphs/graph_1425.gpickle
