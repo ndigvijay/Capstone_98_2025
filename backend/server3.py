@@ -37,7 +37,7 @@ if not MONGO_URI:
 
 client = MongoClient(MONGO_URI)
 db = client['malware_analysis']
-collection = db['dataset']
+collection = db['dataset1']
 
 
 

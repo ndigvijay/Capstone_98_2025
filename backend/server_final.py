@@ -12,6 +12,8 @@ import logging
 from functools import wraps
 from dotenv import load_dotenv
 import pickle  # Import pickle for serialization
+from networkx.drawing.nx_agraph import graphviz_layout
+from pyvis.network import Network
 
 # Load environment variables
 load_dotenv()
@@ -330,103 +332,154 @@ def process_report(report, task_id):
         # image_path = os.path.join(graphs_img_dir, f"graph_{task_id}.png")
         # plt.savefig(image_path, dpi=150)
         # plt.close()
+
+
         # --- Enhancements Start Here ---
 
         num_nodes = G.number_of_nodes()
         num_edges = G.number_of_edges()
         logger.info(f"Total nodes: {num_nodes}, Total edges: {num_edges}")
+        # Initialize a PyVis network
+        net = Network(notebook=False, cdn_resources='remote')
 
-        # Use `kamada_kawai_layout` for better performance on larger graphs
-        pos = nx.kamada_kawai_layout(G)
+        # Adjust the physics settings for large graphs
+        if num_nodes > 5000:
+            net.barnes_hut()
+        else:
+            net.force_atlas_2based()
 
-        # Node and Edge Settings
-        node_size = 100  
-        font_size = 2
-        edge_widths = []
-        edge_colors = []
+        # Add nodes and edges to the PyVis network
+        for node, data in G.nodes(data=True):
+            node_type = data.get('type', 'Unknown')
+            label = data.get('label', '')
+            color = {
+                'DLL': 'lightblue',
+                'File': 'lightgreen',
+                'Registry Key': 'red',
+                'Directory': 'yellow',
+                'Network': 'lightpink'
+            }.get(node_type, 'grey')
+            net.add_node(node, label=label, color=color)
 
-        # Set figure size to 15x15 inches
-        plt.figure(figsize=(7, 7))
+        for source, target, data in G.edges(data=True):
+            interaction = data.get('interaction', 'other')
+            color = {
+                'opened': 'green',
+                'failed': 'red',
+                'accessed': 'orange',
+                'networked': 'blue'
+            }.get(interaction, 'black')
+            net.add_edge(source, target, color=color)
 
-        # Labels for all nodes
-        labels = {node: G.nodes[node]['label'] for node in G.nodes()}
-        logger.info(f"Number of labeled nodes: {len(labels)}")
-
-        # Define edge colors and widths based on interaction type
-        for (u, v, d) in G.edges(data=True):
-            interaction = d.get('interaction', 'other')
-            if interaction == 'opened':
-                edge_colors.append('green')
-                edge_widths.append(0.2)
-            elif interaction == 'failed':
-                edge_colors.append('red')
-                edge_widths.append(0.2)
-            elif interaction == 'accessed':
-                edge_colors.append('orange')
-                edge_widths.append(0.1)
-            elif interaction == 'networked':
-                edge_colors.append('blue')
-                edge_widths.append(0.1)
-            else:
-                edge_colors.append('black')
-                edge_widths.append(0.1)
-
-        # Node colors based on type
-        node_colors_map = {
-            'DLL': 'lightblue',
-            'File': 'lightgreen',
-            'Registry Key': 'red',
-            'Directory': 'yellow',
-            'Network': 'lightpink'
-        }
-        node_color_list = [node_colors_map.get(G.nodes[node].get('type', 'Unknown'), 'grey') for node in G.nodes()]
-
-        # Draw the Graph
-        nx.draw_networkx(
-            G,
-            pos,
-            labels=labels,
-            node_color=node_color_list,
-            node_size=node_size,
-            font_size=font_size,
-            edge_color=edge_colors,
-            width=edge_widths
-        )
-
-        plt.title("Behavioral Analysis Graph with Optimized Layout")
-
-        # Save the Graph
-        graphs_dir = "graphs"
-        graphs_img_dir = "graphs_img"
-        os.makedirs(graphs_dir, exist_ok=True)
-        os.makedirs(graphs_img_dir, exist_ok=True)
-
-        # Save as PNG
-        image_path_png = os.path.join(graphs_img_dir, f"graph_{task_id}.png")
-        plt.savefig(image_path_png, dpi=150, bbox_inches='tight')
-        logger.info(f"Graph saved to {image_path_png}")
-
-        # Save as SVG for better scalability (optional)
-        image_path_svg = os.path.join(graphs_img_dir, f"graph_{task_id}.svg")
-        plt.savefig(image_path_svg, format='svg', dpi=300, bbox_inches='tight')
-        logger.info(f"Graph saved to {image_path_svg}")
-
-        plt.close()
-
-        logger.info(f"Graph saved to {graphs_img_dir}")
-
+        # Save the network to an HTML file
+        graphs_html_dir = "graphs_html"
+        os.makedirs(graphs_html_dir, exist_ok=True)
+        html_path = os.path.join(graphs_html_dir, f"graph_{task_id}.html")
+        net.write_html(html_path)
+        logger.info(f"Graph saved to {html_path}")
 
         # Serialize and save the NetworkX graph structure
         graph_pickle_path = f"graphs/graph_{task_id}.gpickle"
-        # write_gpickle(G, graph_pickle_path)
         with open(graph_pickle_path, 'wb') as f:
-            pickle.dump(G, f)  # Use pickle to write the graph to a file
+            pickle.dump(G, f)
         logger.info(f"Graph structure saved to {graph_pickle_path}")
 
-        return graphs_img_dir
+        return html_path  # Return the path to the HTML file
     except Exception as e:
         logger.error(f"Error in process_report: {e}")
         raise
+
+        # Use `kamada_kawai_layout` for better performance on larger graphs
+    #     pos = nx.kamada_kawai_layout(G)
+
+    #     # Node and Edge Settings
+    #     node_size = 100  
+    #     font_size = 2
+    #     edge_widths = []
+    #     edge_colors = []
+
+    #     # Set figure size to 15x15 inches
+    #     plt.figure(figsize=(7, 7))
+
+    #     # Labels for all nodes
+    #     labels = {node: G.nodes[node]['label'] for node in G.nodes()}
+    #     logger.info(f"Number of labeled nodes: {len(labels)}")
+
+    #     # Define edge colors and widths based on interaction type
+    #     for (u, v, d) in G.edges(data=True):
+    #         interaction = d.get('interaction', 'other')
+    #         if interaction == 'opened':
+    #             edge_colors.append('green')
+    #             edge_widths.append(0.2)
+    #         elif interaction == 'failed':
+    #             edge_colors.append('red')
+    #             edge_widths.append(0.2)
+    #         elif interaction == 'accessed':
+    #             edge_colors.append('orange')
+    #             edge_widths.append(0.1)
+    #         elif interaction == 'networked':
+    #             edge_colors.append('blue')
+    #             edge_widths.append(0.1)
+    #         else:
+    #             edge_colors.append('black')
+    #             edge_widths.append(0.1)
+
+    #     # Node colors based on type
+    #     node_colors_map = {
+    #         'DLL': 'lightblue',
+    #         'File': 'lightgreen',
+    #         'Registry Key': 'red',
+    #         'Directory': 'yellow',
+    #         'Network': 'lightpink'
+    #     }
+    #     node_color_list = [node_colors_map.get(G.nodes[node].get('type', 'Unknown'), 'grey') for node in G.nodes()]
+
+    #     # Draw the Graph
+    #     nx.draw_networkx(
+    #         G,
+    #         pos,
+    #         labels=labels,
+    #         node_color=node_color_list,
+    #         node_size=node_size,
+    #         font_size=font_size,
+    #         edge_color=edge_colors,
+    #         width=edge_widths
+    #     )
+
+    #     plt.title("Behavioral Analysis Graph with Optimized Layout")
+
+    #     # Save the Graph
+    #     graphs_dir = "graphs"
+    #     graphs_img_dir = "graphs_img"
+    #     os.makedirs(graphs_dir, exist_ok=True)
+    #     os.makedirs(graphs_img_dir, exist_ok=True)
+
+    #     # Save as PNG
+    #     image_path_png = os.path.join(graphs_img_dir, f"graph_{task_id}.png")
+    #     plt.savefig(image_path_png, dpi=150, bbox_inches='tight')
+    #     logger.info(f"Graph saved to {image_path_png}")
+
+    #     # Save as SVG for better scalability (optional)
+    #     image_path_svg = os.path.join(graphs_img_dir, f"graph_{task_id}.svg")
+    #     plt.savefig(image_path_svg, format='svg', dpi=300, bbox_inches='tight')
+    #     logger.info(f"Graph saved to {image_path_svg}")
+
+    #     plt.close()
+
+    #     logger.info(f"Graph saved to {graphs_img_dir}")
+
+
+    #     # Serialize and save the NetworkX graph structure
+    #     graph_pickle_path = f"graphs/graph_{task_id}.gpickle"
+    #     # write_gpickle(G, graph_pickle_path)
+    #     with open(graph_pickle_path, 'wb') as f:
+    #         pickle.dump(G, f)  # Use pickle to write the graph to a file
+    #     logger.info(f"Graph structure saved to {graph_pickle_path}")
+
+    #     return graphs_img_dir
+    # except Exception as e:
+    #     logger.error(f"Error in process_report: {e}")
+    #     raise
 
 @app.route("/graphs/<filename>", methods=["GET"])
 def serve_graph(filename):
