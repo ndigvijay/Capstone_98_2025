@@ -1,1 +1,8 @@
 backend/malware_env
+backend/graphs
+backend/.malware_env
+backend/app.log
+backend/extract_embeddings.log
+backend/graphs_img
+backend/graph_again
+backend/graphs_html

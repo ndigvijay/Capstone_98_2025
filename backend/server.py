@@ -320,7 +320,7 @@ def process_report(report, task_id):
     labels = {node: G.nodes[node]['label'] for node in G.nodes() if G.nodes[node]['type'] != 'File'}
 
     # Draw the graph with the manually positioned 'File' nodes
-    plt.figure(figsize=(30, 16))
+    # plt.figure(figsize=(20, 20))
     nx.draw(G, pos, labels=labels, node_color=node_color_list, node_size=2000, font_size=10, font_weight='bold', edge_color=edge_colors)
 
     # Draw edge labels
@@ -328,25 +328,21 @@ def process_report(report, task_id):
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 
     plt.title("Behavioral Analysis Graph with File Nodes at the Center (No File Labels)")
-    plt.show()  # Display the plot interactively
+    # plt.show()  # Display the plot interactively
 
-    # Community Detection
-    partition = community_louvain.best_partition(G)
-    node_colors = [partition.get(node) for node in G.nodes()]
-    plt.figure(figsize=(30, 16))
-    nx.draw(G, pos, node_color=node_colors, with_labels=False, node_size=2000, cmap=plt.cm.rainbow)
-    plt.title("Community Detection")
-    plt.show()  # Display the plot interactively
+    # plt.savefig("graph.png", figsize=(20, 20), dpi=150)
+    # Set up the figure size before plotting
+    plt.figure(figsize=(60, 60))
+    # nx.draw_networkx(G, pos, labels=labels, node_color=node_color_list, node_size=2000, font_size=10, font_weight='bold', edge_color=edge_colors)
+    nx.draw_networkx(G,with_labels=True )
 
-    # Betweenness Centrality
-    centrality = nx.betweenness_centrality(G)
-    plt.figure(figsize=(30, 16))
-    nodes = nx.draw_networkx_nodes(G, pos, node_size=2000, cmap=plt.cm.Blues, node_color=list(centrality.values()))
-    nx.draw_networkx_edges(G, pos)
-    nx.draw_networkx_labels(G, pos, labels=labels, font_size=10, font_weight='bold')
-    plt.title("Betweenness Centrality")
-    plt.colorbar(nodes)
-    plt.show()  # Display the plot interactively
+
+    # Draw edge labels
+    edge_labels = nx.get_edge_attributes(G, 'interaction')
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+
+    plt.title("Behavioral Analysis Graph with File Nodes at the Center (No File Labels)")
+    plt.savefig("graph.png", dpi=150)
 
 if __name__ == "__main__":
     app.run(debug=True)
