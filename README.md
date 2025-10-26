@@ -7,11 +7,11 @@ A malware analysis platform that leverages graph theory and machine learning to 
 
 Watch the complete demonstration of the Graph Based Malware Analysis API:
 
-https://github.com/user-attachments/assets/98_Demo.mp4
+### [**Watch Demo Video **](https://drive.google.com/file/d/1Gu4Q5r6v5ktXGo0ZMa7dfEkRERb559e5/view?usp=sharing)
 
-<video src="98_Demo.mp4" controls width="100%"></video>
+[![Watch Demo](https://img.shields.io/badge/▶️_Watch_Demo-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1Gu4Q5r6v5ktXGo0ZMa7dfEkRERb559e5/view?usp=sharing)
 
-*Note: If the video player doesn't display above, you can find it in the repository root as `98_Demo.mp4` or [click here to download](./98_Demo.mp4)*
+*Alternative: The demo video is also available in the repository root as [`98_Demo.mp4`](./98_Demo.mp4)*
 
 ## Overview
 
