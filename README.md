@@ -9,7 +9,6 @@ Watch the complete demo
 
 https://github.com/user-attachments/assets/02759b76-3043-4a93-8eab-4de686ada16a
 
-stration of the Graph Based Malware Analysis API:
 
 
 *Alternative: The demo video is also available in the repository root as [`98_Demo.mp4`](./98_Demo.mp4)*
