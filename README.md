@@ -5,10 +5,11 @@ A malware analysis platform that leverages graph theory and machine learning to 
 
 ## Demo
 
-Watch the complete demonstration of the Graph Based Malware Analysis API:
+Watch the complete demo
 
+https://github.com/user-attachments/assets/02759b76-3043-4a93-8eab-4de686ada16a
 
-<iframe width="560" height="315" src="https://drive.google.com/file/d/1Gu4Q5r6v5ktXGo0ZMa7dfEkRERb559e5/view?usp=sharing" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+stration of the Graph Based Malware Analysis API:
 
 
 *Alternative: The demo video is also available in the repository root as [`98_Demo.mp4`](./98_Demo.mp4)*
