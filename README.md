@@ -9,7 +9,9 @@ Watch the complete demonstration of the Graph Based Malware Analysis API:
 
 https://github.com/user-attachments/assets/98_Demo.mp4
 
-*Note: If the video doesn't display above, you can find it in the repository root as `98_Demo.mp4`*
+<video src="98_Demo.mp4" controls width="100%"></video>
+
+*Note: If the video player doesn't display above, you can find it in the repository root as `98_Demo.mp4` or [click here to download](./98_Demo.mp4)*
 
 ## Overview
 
